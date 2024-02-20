@@ -1,8 +1,11 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import NewExpenseForm from "@/components/NewExpenseForm.vue";
+</script>
 
 <template>
   <div>
     <h1>Expenses</h1>
+    <NewExpenseForm />
   </div>
 </template>
 
