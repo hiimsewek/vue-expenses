@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import NewExpenseForm from "@/components/NewExpenseForm.vue";
+import ExpensesTable from "./components/ExpensesTable.vue";
 </script>
 
 <template>
   <div>
     <h1>Expenses</h1>
     <NewExpenseForm />
+    <ExpensesTable />
   </div>
 </template>
 
