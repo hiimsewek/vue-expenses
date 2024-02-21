@@ -1,7 +1,8 @@
-import { computed, reactive } from "vue";
+import { computed, reactive, ref } from "vue";
 import { defineStore } from "pinia";
 import type { Expense } from "@/types";
 import { getStoredData, storeData } from "@/utils/storage";
+import { getMonthAndYear } from "@/utils/date";
 
 const STORE_KEY = "expenses";
 
@@ -9,9 +10,6 @@ export const useExpenses = defineStore(STORE_KEY, () => {
   const initialState = getStoredData<Expense[]>(STORE_KEY, []);
 
   const expenses = reactive(initialState);
-  const total = computed(() => {
-    return expenses.reduce((result, expense) => (result += expense.amount), 0);
-  });
 
   const addExpense = (item: Expense) => {
     expenses.push(item);
@@ -34,5 +32,82 @@ export const useExpenses = defineStore(STORE_KEY, () => {
     storeData<Expense[]>(STORE_KEY, expenses);
   };
 
-  return { expenses, addExpense, total, deleteExpense, editExpense };
+  const uniqueCategories = computed(() => {
+    const data = expenses.reduce<Set<string>>((result, expense) => {
+      result.add(expense.category);
+      return result;
+    }, new Set());
+
+    return [...data].sort((a, b) => (a < b ? -1 : 1));
+  });
+
+  const uniqueMonths = computed(() => {
+    const data = expenses.reduce<Set<string>>((result, expense) => {
+      const formattedDate = getMonthAndYear(new Date(expense.date));
+
+      result.add(formattedDate);
+      return result;
+    }, new Set());
+
+    return [...data].sort((a, b) => (a < b ? -1 : 1));
+  });
+
+  const minExpense = computed(() => {
+    const amounts = expenses.reduce<number[]>((result, expense) => {
+      result.push(expense.amount);
+      return result;
+    }, []);
+
+    return Math.min(...amounts);
+  });
+
+  const maxExpense = computed(() => {
+    const amounts = expenses.reduce<number[]>((result, expense) => {
+      result.push(expense.amount);
+      return result;
+    }, []);
+
+    return Math.max(...amounts);
+  });
+
+  const filters = ref({
+    categories: uniqueCategories.value,
+    months: uniqueMonths.value,
+    amountRange: [minExpense.value, maxExpense.value],
+  });
+
+  const filteredExpenses = computed(() => {
+    return expenses.filter((expense) => {
+      const categories =
+        filters.value.categories.length > 0
+          ? filters.value.categories
+          : uniqueCategories.value;
+      const months =
+        filters.value.months.length > 0
+          ? filters.value.months
+          : uniqueMonths.value;
+      const includesCategory = categories.includes(expense.category);
+      const includesMonth = months.includes(
+        getMonthAndYear(new Date(expense.date))
+      );
+      const isWithinRange =
+        expense.amount >= filters.value.amountRange[0] &&
+        expense.amount <= filters.value.amountRange[1];
+
+      return includesCategory && includesMonth && isWithinRange;
+    });
+  });
+
+  return {
+    expenses,
+    filteredExpenses,
+    addExpense,
+    deleteExpense,
+    editExpense,
+    filters,
+    uniqueCategories,
+    uniqueMonths,
+    minExpense,
+    maxExpense,
+  };
 });

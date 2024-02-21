@@ -2,12 +2,20 @@
 import DataTable from "primevue/datatable";
 import Column from "primevue/column";
 import { storeToRefs } from "pinia";
-import { ref, type Ref } from "vue";
+import { computed, ref, type Ref } from "vue";
 import { useExpenses } from "@/stores/expenses";
 import EditExpenseForm from "./EditExpenseForm.vue";
+import ExpensesFilters from "./ExpensesFilters.vue";
 
 const expensesStore = useExpenses();
-const { expenses, total } = storeToRefs(expensesStore);
+const { filteredExpenses } = storeToRefs(expensesStore);
+
+const total = computed(() => {
+  return filteredExpenses.value.reduce(
+    (result, expense) => (result += expense.amount),
+    0
+  );
+});
 
 const itemToEdit: Ref<string | null> = ref(null);
 
@@ -18,12 +26,21 @@ const setItemToEdit = (id: string) => {
 const closeEditHandler = () => {
   itemToEdit.value = null;
 };
+
+const filtersActive = ref(false);
+
+const toggleFilters = () => {
+  filtersActive.value = !filtersActive.value;
+};
 </script>
 
 <template>
-  <div>
-    <div v-if="expenses.length > 0" class="expenseWrapper">
-      <DataTable :value="expenses" scrollable stripedRows removableSort>
+  <div class="outerContainer">
+    <div v-if="filteredExpenses.length > 0">
+      <DataTable :value="filteredExpenses" scrollable stripedRows removableSort>
+        <template #header>
+          <i class="pi pi-filter" aria-label="Filter" @click="toggleFilters" />
+        </template>
         <Column header="Date" field="date" sortable></Column>
         <Column header="Category" field="category" sortable></Column>
         <Column header="Amount" field="amount" sortable></Column>
@@ -46,6 +63,7 @@ const closeEditHandler = () => {
     </div>
     <span v-else>You don't have any expenses yet.</span>
   </div>
+  <ExpensesFilters :visible="filtersActive" :on-close="toggleFilters" />
   <EditExpenseForm
     v-if="itemToEdit"
     :id="itemToEdit"
@@ -55,20 +73,20 @@ const closeEditHandler = () => {
 </template>
 
 <style scoped>
-.expenseWrapper {
+.outerContainer {
   width: 100%;
-}
-.p-datatable {
-  width: 90%;
 }
 
 .p-datatable i {
-  margin-right: 10px;
   cursor: pointer;
   transition: color 0.3s;
 }
 
-.p-datatable i:last-of-type {
+.p-datatable tbody i {
+  margin-right: 10px;
+}
+
+.p-datatable tbody i:last-of-type {
   padding-right: 0;
 }
 
@@ -77,8 +95,9 @@ const closeEditHandler = () => {
 }
 
 @media (min-width: 1280px) {
-  .p-datatable {
+  .outerContainer {
     width: auto;
+    margin: 0 auto;
   }
 }
 </style>
