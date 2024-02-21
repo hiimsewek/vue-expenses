@@ -5,6 +5,10 @@
     box-sizing: border-box;
   }
 
+  .p-datatable .p-datatable-header {
+    text-align: right;
+  }
+
   .p-datatable .p-datatable-footer {
     text-align: center;
   }
