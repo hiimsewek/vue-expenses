@@ -19,6 +19,12 @@ const submitDisabled = computed(
 
 const { addExpense } = useExpenses();
 
+const clearForm = () => {
+  date.value = null;
+  category.value = "";
+  amount.value = null;
+};
+
 const addExpenseHandler = () => {
   if (!date.value || !category.value || !amount.value) return;
 
@@ -30,6 +36,7 @@ const addExpenseHandler = () => {
   };
 
   addExpense(data);
+  clearForm();
 };
 
 const bigDeviceBreakpoint = 1280;
