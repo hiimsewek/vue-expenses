@@ -1,8 +1,12 @@
-import { computed, reactive, ref } from "vue";
+import { computed, reactive, ref, type Ref } from "vue";
 import { defineStore } from "pinia";
-import type { Expense } from "@/types";
+import type { Expense, ExpensesSummary } from "@/types";
 import { getStoredData, storeData } from "@/utils/storage";
 import { getMonthAndYear } from "@/utils/date";
+import {
+  groupExpensesByMonth,
+  prepareSummaryData,
+} from "@/utils/expensesHelpers";
 
 const STORE_KEY = "expenses";
 
@@ -86,6 +90,7 @@ export const useExpenses = defineStore(STORE_KEY, () => {
         filters.value.months.length > 0
           ? filters.value.months
           : uniqueMonths.value;
+
       const includesCategory = categories.includes(expense.category);
       const includesMonth = months.includes(
         getMonthAndYear(new Date(expense.date))
@@ -98,9 +103,29 @@ export const useExpenses = defineStore(STORE_KEY, () => {
     });
   });
 
+  const total = computed(() => {
+    return filteredExpenses.value.reduce(
+      (result, expense) => (result += expense.amount),
+      0
+    );
+  });
+
+  const expensesSummary: Ref<ExpensesSummary | null> = ref(null);
+
+  const generateSummary = () => {
+    const data = groupExpensesByMonth(filteredExpenses.value).flat();
+    const summary = prepareSummaryData(data);
+    expensesSummary.value = summary;
+  };
+
+  const clearSummary = () => {
+    expensesSummary.value = null;
+  };
+
   return {
     expenses,
     filteredExpenses,
+    total,
     addExpense,
     deleteExpense,
     editExpense,
@@ -109,5 +134,8 @@ export const useExpenses = defineStore(STORE_KEY, () => {
     uniqueMonths,
     minExpense,
     maxExpense,
+    expensesSummary,
+    generateSummary,
+    clearSummary,
   };
 });

@@ -2,20 +2,14 @@
 import DataTable from "primevue/datatable";
 import Column from "primevue/column";
 import { storeToRefs } from "pinia";
-import { computed, ref, type Ref } from "vue";
+import { ref, type Ref } from "vue";
 import { useExpenses } from "@/stores/expenses";
 import EditExpenseForm from "./EditExpenseForm.vue";
 import ExpensesFilters from "./ExpensesFilters.vue";
+import Button from "primevue/button";
 
 const expensesStore = useExpenses();
-const { filteredExpenses } = storeToRefs(expensesStore);
-
-const total = computed(() => {
-  return filteredExpenses.value.reduce(
-    (result, expense) => (result += expense.amount),
-    0
-  );
-});
+const { filteredExpenses, total } = storeToRefs(expensesStore);
 
 const itemToEdit: Ref<string | null> = ref(null);
 
@@ -36,7 +30,7 @@ const toggleFilters = () => {
 
 <template>
   <div class="outerContainer">
-    <div v-if="filteredExpenses.length > 0">
+    <div v-if="filteredExpenses.length > 0" class="tableContainer">
       <DataTable :value="filteredExpenses" scrollable stripedRows removableSort>
         <template #header>
           <i class="pi pi-filter" aria-label="Filter" @click="toggleFilters" />
@@ -60,6 +54,11 @@ const toggleFilters = () => {
         </Column>
         <template #footer>Total: {{ total }}</template>
       </DataTable>
+      <Button
+        label="Generate Summary"
+        class="generateBtn"
+        @click="expensesStore.generateSummary()"
+      />
     </div>
     <span v-else>You don't have any expenses yet.</span>
   </div>
@@ -75,6 +74,7 @@ const toggleFilters = () => {
 <style scoped>
 .outerContainer {
   width: 100%;
+  padding: 20px;
 }
 
 .p-datatable i {
@@ -92,6 +92,16 @@ const toggleFilters = () => {
 
 .p-datatable i:hover {
   color: var(--text-color-secondary);
+}
+
+.tableContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.generateBtn {
+  margin-top: 10px;
+  align-self: center;
 }
 
 @media (min-width: 1280px) {

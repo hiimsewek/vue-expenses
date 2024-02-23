@@ -1,6 +1,12 @@
 <script setup lang="ts">
 import NewExpenseForm from "@/components/NewExpenseForm.vue";
 import ExpensesTable from "./components/ExpensesTable.vue";
+import ExpensesSummary from "./components/ExpensesSummary.vue";
+import { useExpenses } from "./stores/expenses";
+import { storeToRefs } from "pinia";
+
+const expensesStore = useExpenses();
+const { expensesSummary } = storeToRefs(expensesStore);
 </script>
 
 <template>
@@ -8,6 +14,7 @@ import ExpensesTable from "./components/ExpensesTable.vue";
     <h1>Expenses</h1>
     <NewExpenseForm />
     <ExpensesTable />
+    <ExpensesSummary v-if="expensesSummary" />
   </div>
 </template>
 
