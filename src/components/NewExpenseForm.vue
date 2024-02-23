@@ -71,52 +71,58 @@ const handleWindowSizeChange = () => {
 </script>
 
 <template>
-  <Button
-    v-if="!isBigDevice"
-    :icon="toggleIcon"
-    rounded
-    class="itemSpacing"
-    @click="toggleForm"
-  />
-  <div v-if="formActive">
-    <h2 class="formTitle">Add New Expense</h2>
-    <div class="newExpenseFormContainer">
-      <FloatLabel class="itemSpacing">
-        <Calendar
-          v-model="date"
-          inputId="newExpenseDate"
-          selectOtherMonths
-          placeholder="mm/dd/yyyy"
-          :min-date="getCurrentYear()"
-          :max-date="getTodaysDate()"
-        />
-        <label for="newExpenseDate">Date</label>
-      </FloatLabel>
+  <div class="outerContainer">
+    <Button
+      v-if="!isBigDevice"
+      :icon="toggleIcon"
+      rounded
+      class="itemSpacing"
+      @click="toggleForm"
+    />
+    <div v-if="formActive">
+      <h2 class="formTitle">Add New Expense</h2>
+      <div class="newExpenseFormContainer">
+        <FloatLabel class="itemSpacing">
+          <Calendar
+            v-model="date"
+            inputId="newExpenseDate"
+            selectOtherMonths
+            placeholder="mm/dd/yyyy"
+            :min-date="getCurrentYear()"
+            :max-date="getTodaysDate()"
+          />
+          <label for="newExpenseDate">Date</label>
+        </FloatLabel>
 
-      <FloatLabel class="itemSpacing">
-        <InputText v-model="category" inputId="newExpenseCategory" />
-        <label for="newExpenseCategory">Category</label>
-      </FloatLabel>
+        <FloatLabel class="itemSpacing">
+          <InputText v-model="category" inputId="newExpenseCategory" />
+          <label for="newExpenseCategory">Category</label>
+        </FloatLabel>
 
-      <FloatLabel class="itemSpacing">
-        <InputNumber
-          v-model="amount"
-          inputId="newExpenseAmount"
-          :max-fraction-digits="2"
+        <FloatLabel class="itemSpacing">
+          <InputNumber
+            v-model="amount"
+            inputId="newExpenseAmount"
+            :max-fraction-digits="2"
+          />
+          <label for="newExpenseAmount">Amount</label>
+        </FloatLabel>
+        <Button
+          label="Add Expense"
+          class="itemSpacing"
+          :disabled="submitDisabled"
+          @click="addExpenseHandler"
         />
-        <label for="newExpenseAmount">Amount</label>
-      </FloatLabel>
-      <Button
-        label="Add Expense"
-        class="itemSpacing"
-        :disabled="submitDisabled"
-        @click="addExpenseHandler"
-      />
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
+.outerContainer {
+  margin: 20px 0;
+}
+
 .formTitle {
   text-align: center;
   margin: 20px 0;
