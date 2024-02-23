@@ -29,26 +29,32 @@ export const groupExpensesByMonth = (expenses: Expense[]) => {
 };
 
 export const prepareSummaryData = (expenses: GroupedByMonth) => {
-  return expenses.reduce<ExpensesSummary[]>((result, item) => {
+  return expenses.reduce<ExpensesSummary>((result, item) => {
     const { monthYear, day, category, amount } = item;
 
     const [month, year] = monthYear.split("/");
 
-    const daysInMonth = getDaysInMonth(new Date(year, month, -1));
+    const daysInMonth = getDaysInMonth(new Date(+year, +month, -1));
 
     let itemIndex = result.findIndex((el) => el.date === monthYear);
 
+    const categoryBaseContent = {
+      total: 0,
+      expenses: new Array(daysInMonth).fill("-"),
+    };
+
     if (itemIndex === -1) {
-      result.push({ date: monthYear, total: 0, categories: {} });
+      result.push({
+        date: monthYear,
+        total: 0,
+        categories: { [category]: categoryBaseContent },
+      });
     }
 
     itemIndex = result.findIndex((el) => el.date === monthYear);
 
     if (!result[itemIndex].categories[category]) {
-      result[itemIndex].categories[category] = {
-        total: 0,
-        expenses: new Array(daysInMonth).fill("-"),
-      };
+      result[itemIndex].categories[category] = categoryBaseContent;
     }
 
     const amountValue =
@@ -57,7 +63,8 @@ export const prepareSummaryData = (expenses: GroupedByMonth) => {
     if (amountValue === "-") {
       result[itemIndex].categories[category].expenses[day - 1] = amount;
     } else {
-      result[itemIndex].categories[category].expenses[day - 1] += amount;
+      result[itemIndex].categories[category].expenses[day - 1] =
+        +amountValue + amount;
     }
 
     result[itemIndex].total += amount;

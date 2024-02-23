@@ -14,13 +14,15 @@ export type ExpenseByMonth = {
 
 export type GroupedByMonth = ExpenseByMonth[];
 
-export type ExpensesSummary = {
+export type SummaryItem = {
   date: string;
   total: number;
   categories: {
-    [category: string]: {
+    [key: string]: {
       total: number;
       expenses: (number | string)[];
     };
-  }[];
+  };
 };
+
+export type ExpensesSummary = SummaryItem[];
