@@ -1,37 +1,42 @@
 import type { Expense, ExpensesSummary, GroupedByMonth } from "@/types";
 import { getDaysInMonth, getMonthAndYear } from "./date";
 
-export const sortAscending = <T>(data: T[], field: keyof T) =>
-  [...data].sort((a, b) => (a[field] < b[field] ? -1 : 1));
+export const sortAscending = <T>(data: T[], field?: keyof T) => {
+  if (!field) return [...data].sort((a, b) => (a < b ? -1 : 1));
+
+  return [...data].sort((a, b) => (a[field] < b[field] ? -1 : 1));
+};
 
 export const groupExpensesByMonth = (expenses: Expense[]) => {
   const sortedByDate = sortAscending(expenses, "date");
 
-  return sortedByDate.reduce<GroupedByMonth[]>((result, expense) => {
-    const day = new Date(expense.date).getDate();
-    const monthYear = getMonthAndYear(new Date(expense.date));
+  const groups = sortedByDate
+    .reduce<GroupedByMonth[]>((result, expense) => {
+      const day = new Date(expense.date).getDate();
+      const monthYear = getMonthAndYear(new Date(expense.date));
 
-    const item = {
-      monthYear,
-      day,
-      category: expense.category,
-      amount: expense.amount,
-    };
+      const item = {
+        monthYear,
+        day,
+        category: expense.category,
+        amount: expense.amount,
+      };
 
-    const dateIndex = result.findIndex((el) => el[0].monthYear === monthYear);
-    if (dateIndex !== -1) {
-      result[dateIndex].push(item);
-    } else {
-      result.push([item]);
-    }
-    return result;
-  }, []);
+      const dateIndex = result.findIndex((el) => el[0].monthYear === monthYear);
+      if (dateIndex !== -1) {
+        result[dateIndex].push(item);
+      } else {
+        result.push([item]);
+      }
+      return result;
+    }, [])
+    .map((group) => sortAscending(group, "category"));
+
+  return groups;
 };
 
 export const prepareSummaryData = (expenses: GroupedByMonth) => {
-  const sortedByCategories = sortAscending(expenses, "category");
-
-  return sortedByCategories.reduce<ExpensesSummary>((result, item) => {
+  return expenses.reduce<ExpensesSummary>((result, item) => {
     const { monthYear, day, category, amount } = item;
 
     const [month, year] = monthYear.split("/");

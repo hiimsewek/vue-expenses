@@ -6,6 +6,7 @@ import { getMonthAndYear } from "@/utils/date";
 import {
   groupExpensesByMonth,
   prepareSummaryData,
+  sortAscending,
 } from "@/utils/expensesHelpers";
 
 const STORE_KEY = "expenses";
@@ -42,7 +43,7 @@ export const useExpenses = defineStore(STORE_KEY, () => {
       return result;
     }, new Set());
 
-    return [...data].sort((a, b) => (a < b ? -1 : 1));
+    return sortAscending([...data]);
   });
 
   const uniqueMonths = computed(() => {
@@ -53,7 +54,7 @@ export const useExpenses = defineStore(STORE_KEY, () => {
       return result;
     }, new Set());
 
-    return [...data].sort((a, b) => (a < b ? -1 : 1));
+    return sortAscending([...data]);
   });
 
   const minExpense = computed(() => {
