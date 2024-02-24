@@ -28,10 +28,14 @@ const clearForm = () => {
 const addExpenseHandler = () => {
   if (!date.value || !category.value || !amount.value) return;
 
+  const formattedCategory =
+    category.value.charAt(0).toUpperCase() +
+    category.value.slice(1).toLowerCase();
+
   const data = {
     id: uuidv4() as string,
     date: getFormattedDate(date.value),
-    category: category.value,
+    category: formattedCategory,
     amount: amount.value,
   };
 
