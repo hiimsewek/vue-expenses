@@ -25,6 +25,8 @@ const dateRowspan = computed(() => {
 
 const exportSummary = () => {
   const summaryTable = document.getElementById("summaryTable-id");
+  const tableWidth = summaryTable.offsetWidth;
+
   const doc = new jsPDF({
     orientation: "landscape",
     unit: "px",
@@ -36,6 +38,9 @@ const exportSummary = () => {
     callback: function (doc) {
       doc.save("summary.pdf");
     },
+    margin: [10, 0, 10, 0],
+    x: doc.internal.pageSize.width / 2 - tableWidth / 2,
+    autoPaging: "text",
   });
 };
 </script>
