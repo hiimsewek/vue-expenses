@@ -82,6 +82,7 @@ const handleWindowSizeChange = () => {
       rounded
       class="itemSpacing"
       @click="toggleForm"
+      aria-label="Expand form"
     />
     <div v-if="formActive">
       <h2 class="formTitle">Add New Expense</h2>
@@ -94,12 +95,17 @@ const handleWindowSizeChange = () => {
             placeholder="mm/dd/yyyy"
             :min-date="getCurrentYear()"
             :max-date="getTodaysDate()"
+            aria-label="Date"
           />
           <label for="newExpenseDate">Date</label>
         </FloatLabel>
 
         <FloatLabel class="itemSpacing">
-          <InputText v-model="category" inputId="newExpenseCategory" />
+          <InputText
+            v-model="category"
+            inputId="newExpenseCategory"
+            aria-label="Category"
+          />
           <label for="newExpenseCategory">Category</label>
         </FloatLabel>
 
@@ -108,6 +114,7 @@ const handleWindowSizeChange = () => {
             v-model="amount"
             inputId="newExpenseAmount"
             :max-fraction-digits="2"
+            aria-label="Amount"
           />
           <label for="newExpenseAmount">Amount</label>
         </FloatLabel>
@@ -116,6 +123,7 @@ const handleWindowSizeChange = () => {
           class="itemSpacing"
           :disabled="submitDisabled"
           @click="addExpenseHandler"
+          aria-label="Add expense"
         />
       </div>
     </div>

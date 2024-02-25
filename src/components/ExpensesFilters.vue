@@ -93,11 +93,12 @@ const resetActive = computed(() => {
           display="chip"
           :maxSelectedLabels="3"
           class="maxWidth inputSpacing"
+          aria-label="Categories"
         />
       </div>
 
       <div class="maxWidth itemSpacing">
-        <label for="ms-categories">Months</label>
+        <label for="ms-months">Months</label>
         <MultiSelect
           placeholder="Select months"
           v-model="months"
@@ -106,6 +107,7 @@ const resetActive = computed(() => {
           display="chip"
           :maxSelectedLabels="3"
           class="maxWidth inputSpacing"
+          aria-label="Months"
         />
       </div>
 
@@ -120,6 +122,7 @@ const resetActive = computed(() => {
           :max="maxExpense"
           :step="0.1"
           class="maxWidth inputSpacing"
+          aria-label="Amount range"
         />
         <div class="rangeText">{{ amountRange[0] }} - {{ amountRange[1] }}</div>
       </div>
@@ -129,6 +132,7 @@ const resetActive = computed(() => {
         text
         severity="secondary"
         @click="resetFilters"
+        aria-label="Reset filters"
       />
     </div>
   </Sidebar>

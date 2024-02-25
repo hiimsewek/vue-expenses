@@ -81,12 +81,17 @@ const submitEditHandler = () => {
           placeholder="mm/dd/yyyy"
           :min-date="getCurrentYear()"
           :max-date="getTodaysDate()"
+          aria-label="Date"
         />
         <label for="newExpenseDate">Date</label>
       </FloatLabel>
 
       <FloatLabel class="itemSpacing">
-        <InputText v-model="category" inputId="newExpenseCategory" />
+        <InputText
+          v-model="category"
+          inputId="newExpenseCategory"
+          aria-label="Category"
+        />
         <label for="newExpenseCategory">Category</label>
       </FloatLabel>
 
@@ -95,6 +100,7 @@ const submitEditHandler = () => {
           v-model="amount"
           inputId="newExpenseAmount"
           :max-fraction-digits="2"
+          aria-label="Amount"
         />
         <label for="newExpenseAmount">Amount</label>
       </FloatLabel>
@@ -103,6 +109,7 @@ const submitEditHandler = () => {
         class="itemSpacing"
         :disabled="submitDisabled"
         @click="submitEditHandler()"
+        aria-label="Edit expense"
       />
     </div>
   </Dialog>

@@ -57,6 +57,7 @@ const toggleFilters = () => {
       <Button
         label="Generate Summary"
         class="generateBtn"
+        aria-label="Generate summary"
         @click="expensesStore.generateSummary()"
       />
     </div>
@@ -75,6 +76,7 @@ const toggleFilters = () => {
 .outerContainer {
   width: 100%;
   padding: 20px;
+  text-align: center;
 }
 
 .p-datatable i {
@@ -101,7 +103,6 @@ const toggleFilters = () => {
 
 .generateBtn {
   margin-top: 10px;
-  align-self: center;
 }
 
 @media (min-width: 1280px) {
