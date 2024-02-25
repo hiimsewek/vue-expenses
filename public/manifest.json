@@ -1,0 +1,21 @@
+{
+  "name": "Expenses",
+  "start_url": "/",
+  "theme_color": "#121212",
+  "background_color": "#121212",
+  "scope": "/",
+  "display": "standalone",
+  "icons": [
+    {
+      "src": "/icons/app-icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/app-icon-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
