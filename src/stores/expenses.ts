@@ -58,6 +58,8 @@ export const useExpenses = defineStore(STORE_KEY, () => {
   });
 
   const minExpense = computed(() => {
+    if (expenses.length === 0) return 0.1;
+
     const amounts = expenses.reduce<number[]>((result, expense) => {
       result.push(expense.amount);
       return result;
@@ -67,6 +69,8 @@ export const useExpenses = defineStore(STORE_KEY, () => {
   });
 
   const maxExpense = computed(() => {
+    if (expenses.length === 0) return Infinity;
+
     const amounts = expenses.reduce<number[]>((result, expense) => {
       result.push(expense.amount);
       return result;
