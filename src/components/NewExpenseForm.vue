@@ -3,7 +3,7 @@ import Button from "primevue/button";
 import FloatLabel from "primevue/floatlabel";
 import Calendar from "primevue/calendar";
 import InputText from "primevue/inputtext";
-import InputNumber from "primevue/inputnumber";
+import InputNumber, { type InputNumberInputEvent } from "primevue/inputnumber";
 import { computed, onMounted, onUnmounted, ref, type Ref } from "vue";
 import { v4 as uuidv4 } from "uuid";
 import { useExpenses } from "@/stores/expenses";
@@ -12,6 +12,10 @@ import { getCurrentYear, getFormattedDate, getTodaysDate } from "@/utils/date";
 const date: Ref<Date | null> = ref(null);
 const category = ref("");
 const amount: Ref<number | null> = ref(null);
+
+const onAmountChange = (e: InputNumberInputEvent) => {
+  amount.value = e.value as number;
+};
 
 const submitDisabled = computed(
   () => !date.value || !category.value || !amount.value
@@ -115,6 +119,8 @@ const handleWindowSizeChange = () => {
             inputId="newExpenseAmount"
             :max-fraction-digits="2"
             aria-label="Amount"
+            :min="0.1"
+            @input="onAmountChange"
           />
           <label for="newExpenseAmount">Amount</label>
         </FloatLabel>

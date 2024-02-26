@@ -3,7 +3,7 @@ import Dialog from "primevue/dialog";
 import Button from "primevue/button";
 import Calendar from "primevue/calendar";
 import FloatLabel from "primevue/floatlabel";
-import InputNumber from "primevue/inputnumber";
+import InputNumber, { type InputNumberInputEvent } from "primevue/inputnumber";
 import InputText from "primevue/inputtext";
 import { computed, ref, type Ref } from "vue";
 import { v4 as uuidv4 } from "uuid";
@@ -34,6 +34,10 @@ const itemToEdit = expenses.value.find((expense) => expense.id === props.id);
 const date: Ref<string | null> = ref(itemToEdit?.date || null);
 const category = ref(itemToEdit?.category);
 const amount: Ref<number | null> = ref(itemToEdit?.amount || null);
+
+const onAmountChange = (e: InputNumberInputEvent) => {
+  amount.value = e.value as number;
+};
 
 const submitDisabled = computed(() => {
   const dateDisabled = !date.value || date.value === itemToEdit?.date;
@@ -101,6 +105,7 @@ const submitEditHandler = () => {
           inputId="editExpenseAmount"
           :max-fraction-digits="2"
           aria-label="Amount"
+          @input="onAmountChange"
         />
         <label for="newExpenseAmount">Amount</label>
       </FloatLabel>
