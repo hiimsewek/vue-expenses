@@ -103,7 +103,7 @@ const handleWindowSizeChange = () => {
         <FloatLabel class="itemSpacing">
           <InputText
             v-model="category"
-            inputId="newExpenseCategory"
+            id="newExpenseCategory"
             aria-label="Category"
           />
           <label for="newExpenseCategory">Category</label>

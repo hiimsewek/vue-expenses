@@ -76,7 +76,7 @@ const submitEditHandler = () => {
       <FloatLabel class="itemSpacing">
         <Calendar
           v-model="date"
-          inputId="newExpenseDate"
+          inputId="editExpenseDate"
           selectOtherMonths
           placeholder="mm/dd/yyyy"
           :min-date="getCurrentYear()"
@@ -89,7 +89,7 @@ const submitEditHandler = () => {
       <FloatLabel class="itemSpacing">
         <InputText
           v-model="category"
-          inputId="newExpenseCategory"
+          id="editExpenseCategory"
           aria-label="Category"
         />
         <label for="newExpenseCategory">Category</label>
@@ -98,7 +98,7 @@ const submitEditHandler = () => {
       <FloatLabel class="itemSpacing">
         <InputNumber
           v-model="amount"
-          inputId="newExpenseAmount"
+          inputId="editExpenseAmount"
           :max-fraction-digits="2"
           aria-label="Amount"
         />
