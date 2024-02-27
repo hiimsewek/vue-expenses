@@ -62,7 +62,7 @@ const exportSummary = () => {
         class="exportBtn"
         data-test="exportSummaryBtn"
       />
-      <table data-test="summaryTable">
+      <table data-test="summaryTable" id="summaryTable-id">
         <thead>
           <tr>
             <th>Date</th>
