@@ -26,3 +26,9 @@ export type SummaryItem = {
 };
 
 export type ExpensesSummary = SummaryItem[];
+
+export type Filters = {
+  categories?: string[];
+  months?: string[];
+  amountRange?: [number, number];
+};
