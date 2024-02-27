@@ -38,10 +38,25 @@ const emptyExpenseMessage = computed(() => {
 
 <template>
   <div class="outerContainer">
-    <div v-if="filteredExpenses.length > 0" class="tableContainer">
-      <DataTable :value="filteredExpenses" scrollable stripedRows removableSort>
+    <div
+      v-if="filteredExpenses.length > 0"
+      class="tableContainer"
+      data-test="expensesTableContainer"
+    >
+      <DataTable
+        :value="filteredExpenses"
+        scrollable
+        stripedRows
+        removableSort
+        data-test="expensesTable"
+      >
         <template #header v-if="showFiltersBtn">
-          <i class="pi pi-filter" aria-label="Filter" @click="toggleFilters" />
+          <i
+            class="pi pi-filter"
+            aria-label="Filter"
+            @click="toggleFilters"
+            data-test="showFiltersBtn"
+          />
         </template>
         <Column header="Date" field="date" sortable></Column>
         <Column header="Category" field="category" sortable></Column>
@@ -52,16 +67,18 @@ const emptyExpenseMessage = computed(() => {
               class="pi pi-pencil"
               aria-label="Edit"
               @click="setItemToEdit(data.id)"
+              data-test="toggleEditExpense"
             />
             <i
               class="pi pi-trash"
               aria-label="Delete"
               @click="expensesStore.deleteExpense(data.id)"
+              data-test="deleteExpense"
             />
           </template>
         </Column>
         <template #footer
-          ><span>Total: {{ total }}</span></template
+          ><span data-test="expensesTotal">Total: {{ total }}</span></template
         >
       </DataTable>
       <Button
@@ -69,9 +86,12 @@ const emptyExpenseMessage = computed(() => {
         class="generateBtn"
         aria-label="Generate summary"
         @click="expensesStore.generateSummary()"
+        data-test="generateSummaryBtn"
       />
     </div>
-    <span v-else>{{ emptyExpenseMessage }}</span>
+    <span v-else data-test="emptyExpensesMessage">{{
+      emptyExpenseMessage
+    }}</span>
   </div>
   <ExpensesFilters :visible="filtersActive" :on-close="toggleFilters" />
   <EditExpenseForm

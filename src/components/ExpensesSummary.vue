@@ -53,10 +53,16 @@ const exportSummary = () => {
     modal
     :draggable="false"
     dismissableMask
+    data-test="summaryTableContainer"
   >
     <div class="tableWrapper">
-      <Button label="Export to PDF" @click="exportSummary" class="exportBtn" />
-      <table id="summaryTable-id">
+      <Button
+        label="Export to PDF"
+        @click="exportSummary"
+        class="exportBtn"
+        data-test="exportSummaryBtn"
+      />
+      <table data-test="summaryTable">
         <thead>
           <tr>
             <th>Date</th>
@@ -67,17 +73,23 @@ const exportSummary = () => {
         <tbody>
           <template v-for="(item, idx) of expensesSummary" :key="idx">
             <tr>
-              <td :rowspan="dateRowspan[idx]">{{ item.date }}</td>
+              <td :rowspan="dateRowspan[idx]" data-test="summaryDateField">
+                {{ item.date }}
+              </td>
               <td></td>
-              <td class="dateTotal">Total: {{ item.total }}</td>
+              <td class="dateTotal" data-test="summaryMonthlyTotal">
+                Total: {{ item.total }}
+              </td>
             </tr>
             <template
               v-for="(categoryData, category) in item.categories"
               :key="category"
             >
               <tr>
-                <td>{{ category }}</td>
-                <td>Total: {{ categoryData.total }}</td>
+                <td data-test="summaryCategoryField">{{ category }}</td>
+                <td data-test="summaryCategoryTotal">
+                  Total: {{ categoryData.total }}
+                </td>
               </tr>
               <tr
                 v-for="(expenseData, idx) of categoryData.expenses"
@@ -91,7 +103,7 @@ const exportSummary = () => {
         </tbody>
         <tfoot>
           <tr>
-            <td colspan="3">Total: {{ total }}</td>
+            <td colspan="3" data-test="summaryTotal">Total: {{ total }}</td>
           </tr>
         </tfoot>
       </table>

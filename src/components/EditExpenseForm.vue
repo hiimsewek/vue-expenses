@@ -75,6 +75,7 @@ const submitEditHandler = () => {
     header="Edit Expense"
     :draggable="false"
     dismissableMask
+    data-test="editExpenseForm"
   >
     <div class="editExpenseFormContainer">
       <FloatLabel class="itemSpacing">
@@ -86,6 +87,7 @@ const submitEditHandler = () => {
           :min-date="getCurrentYear()"
           :max-date="getTodaysDate()"
           aria-label="Date"
+          data-test="editExpenseDate"
         />
         <label for="newExpenseDate">Date</label>
       </FloatLabel>
@@ -95,6 +97,7 @@ const submitEditHandler = () => {
           v-model="category"
           id="editExpenseCategory"
           aria-label="Category"
+          data-test="editExpenseCategory"
         />
         <label for="newExpenseCategory">Category</label>
       </FloatLabel>
@@ -106,6 +109,7 @@ const submitEditHandler = () => {
           :max-fraction-digits="2"
           aria-label="Amount"
           @input="onAmountChange"
+          data-test="editExpenseAmount"
         />
         <label for="newExpenseAmount">Amount</label>
       </FloatLabel>
@@ -115,6 +119,7 @@ const submitEditHandler = () => {
         :disabled="submitDisabled"
         @click="submitEditHandler()"
         aria-label="Edit expense"
+        data-test="editExpenseBtn"
       />
     </div>
   </Dialog>

@@ -80,6 +80,7 @@ const resetActive = computed(() => {
     position="right"
     :visible="props.visible"
     @update:visible="props.onClose"
+    data-test="filtersSidebar"
   >
     <div class="filtersContainer">
       <div class="maxWidth itemSpacing">
@@ -94,6 +95,7 @@ const resetActive = computed(() => {
           :maxSelectedLabels="3"
           class="maxWidth inputSpacing"
           aria-label="Categories"
+          data-test="ms-categories"
         />
       </div>
 
@@ -109,6 +111,7 @@ const resetActive = computed(() => {
           :maxSelectedLabels="3"
           class="maxWidth inputSpacing"
           aria-label="Months"
+          data-test="ms-months"
         />
       </div>
 
@@ -124,8 +127,11 @@ const resetActive = computed(() => {
           :step="0.1"
           class="maxWidth inputSpacing"
           aria-label="Amount range"
+          data-test="slider-amount"
         />
-        <div class="rangeText">{{ amountRange[0] }} - {{ amountRange[1] }}</div>
+        <div class="rangeText" data-test="amountRangeText">
+          {{ amountRange[0] }} - {{ amountRange[1] }}
+        </div>
       </div>
       <Button
         v-if="resetActive"
@@ -134,6 +140,7 @@ const resetActive = computed(() => {
         severity="secondary"
         @click="resetFilters"
         aria-label="Reset filters"
+        data-test="resetFiltersBtn"
       />
     </div>
   </Sidebar>
