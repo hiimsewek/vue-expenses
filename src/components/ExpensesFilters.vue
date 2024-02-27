@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import MultiSelect from "primevue/multiselect";
 import Slider from "primevue/slider";
-import { computed, ref, type Ref } from "vue";
+import { computed, ref, type Ref, type ComputedRef, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { useExpenses } from "@/stores/expenses";
 import Sidebar from "primevue/sidebar";
@@ -19,48 +19,48 @@ const props = defineProps({
 });
 
 const expensesStore = useExpenses();
-const { filters, maxExpense, minExpense, uniqueCategories, uniqueMonths } =
+const { minExpense, maxExpense, uniqueCategories, uniqueMonths } =
   storeToRefs(expensesStore);
 
 const categories: Ref<string[]> = ref([]);
 const updateCategoriesFilters = (selectedCategories: string[]) => {
   if (selectedCategories.length > 0) {
-    filters.value.categories = selectedCategories;
+    expensesStore.applyFilters({ categories: selectedCategories });
   } else {
-    filters.value.categories = uniqueCategories.value;
+    expensesStore.applyFilters({ categories: uniqueCategories.value });
   }
 };
 
 const months: Ref<string[]> = ref([]);
 const updateMonthsFilters = (selectedMonths: string[]) => {
   if (selectedMonths.length > 0) {
-    filters.value.months = selectedMonths;
+    expensesStore.applyFilters({ months: selectedMonths });
   } else {
-    filters.value.months = uniqueMonths.value;
+    expensesStore.applyFilters({ months: uniqueMonths.value });
   }
 };
 
 const rangeValues = ref([minExpense.value, maxExpense.value]);
-const amountRange = computed(() => {
+const amountRange: ComputedRef<[number, number]> = computed(() => {
   const min = Math.min(...rangeValues.value);
   const max = Math.max(...rangeValues.value);
 
   return [min, max];
 });
 const updateAmountFilters = () => {
-  filters.value.amountRange = amountRange.value;
+  expensesStore.applyFilters({ amountRange: amountRange.value });
 };
+
+watch([minExpense, maxExpense], ([newMin, newMax]) => {
+  rangeValues.value = [newMin, newMax];
+});
 
 const resetFilters = () => {
   categories.value = [];
   months.value = [];
   rangeValues.value = [minExpense.value, maxExpense.value];
 
-  filters.value = {
-    categories: categories.value,
-    months: months.value,
-    amountRange: amountRange.value,
-  };
+  expensesStore.resetFilters();
 };
 
 const resetActive = computed(() => {
@@ -100,6 +100,7 @@ const resetActive = computed(() => {
       <div class="maxWidth itemSpacing">
         <label for="ms-months">Months</label>
         <MultiSelect
+          id="ms-months"
           placeholder="Select months"
           v-model="months"
           @update:modelValue="updateMonthsFilters"

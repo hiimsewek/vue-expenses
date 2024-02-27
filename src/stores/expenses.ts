@@ -1,6 +1,6 @@
 import { computed, reactive, ref, type Ref } from "vue";
 import { defineStore } from "pinia";
-import type { Expense, ExpensesSummary } from "@/types";
+import type { Expense, ExpensesSummary, Filters } from "@/types";
 import { getStoredData, storeData } from "@/utils/storage";
 import { getMonthAndYear } from "@/utils/date";
 import {
@@ -56,9 +56,8 @@ export const useExpenses = defineStore(STORE_KEY, () => {
 
     return sortAscending([...data]);
   });
-
   const minExpense = computed(() => {
-    if (expenses.length === 0) return 0.1;
+    if (expenses.length === 0) return 0;
 
     const amounts = expenses.reduce<number[]>((result, expense) => {
       result.push(expense.amount);
@@ -69,7 +68,7 @@ export const useExpenses = defineStore(STORE_KEY, () => {
   });
 
   const maxExpense = computed(() => {
-    if (expenses.length === 0) return Infinity;
+    if (expenses.length === 0) return 0;
 
     const amounts = expenses.reduce<number[]>((result, expense) => {
       result.push(expense.amount);
@@ -79,30 +78,48 @@ export const useExpenses = defineStore(STORE_KEY, () => {
     return Math.max(...amounts);
   });
 
-  const filters = ref({
-    categories: uniqueCategories.value,
-    months: uniqueMonths.value,
-    amountRange: [minExpense.value, maxExpense.value],
-  });
+  const appliedFilters: Ref<Filters | null> = ref(null);
+
+  const applyFilters = (filters: Filters) => {
+    if (!appliedFilters.value) {
+      appliedFilters.value = filters;
+    } else {
+      appliedFilters.value = { ...appliedFilters.value, ...filters };
+    }
+  };
+
+  const resetFilters = () => {
+    appliedFilters.value = null;
+  };
 
   const filteredExpenses = computed(() => {
-    return expenses.filter((expense) => {
-      const categories =
-        filters.value.categories.length > 0
-          ? filters.value.categories
-          : uniqueCategories.value;
-      const months =
-        filters.value.months.length > 0
-          ? filters.value.months
-          : uniqueMonths.value;
+    if (!appliedFilters.value) return expenses;
 
-      const includesCategory = categories.includes(expense.category);
-      const includesMonth = months.includes(
+    return expenses.filter((expense) => {
+      const categoriesExist =
+        appliedFilters.value?.categories &&
+        appliedFilters.value.categories.length > 0;
+
+      const categories = categoriesExist
+        ? appliedFilters.value!.categories
+        : uniqueCategories.value;
+
+      const includesCategory = categories!.includes(expense.category);
+
+      const monthsExist =
+        appliedFilters.value?.months && appliedFilters.value.months.length > 0;
+
+      const months = monthsExist
+        ? appliedFilters.value!.months
+        : uniqueMonths.value;
+
+      const includesMonth = months!.includes(
         getMonthAndYear(new Date(expense.date))
       );
+
+      const amountRange = appliedFilters.value?.amountRange || [0.1, Infinity];
       const isWithinRange =
-        expense.amount >= filters.value.amountRange[0] &&
-        expense.amount <= filters.value.amountRange[1];
+        expense.amount >= amountRange[0] && expense.amount <= amountRange[1];
 
       return includesCategory && includesMonth && isWithinRange;
     });
@@ -131,14 +148,16 @@ export const useExpenses = defineStore(STORE_KEY, () => {
     expenses,
     filteredExpenses,
     total,
+    minExpense,
+    maxExpense,
     addExpense,
     deleteExpense,
     editExpense,
-    filters,
+    appliedFilters,
+    applyFilters,
+    resetFilters,
     uniqueCategories,
     uniqueMonths,
-    minExpense,
-    maxExpense,
     expensesSummary,
     generateSummary,
     clearSummary,
