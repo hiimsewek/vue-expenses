@@ -2,14 +2,14 @@
 import DataTable from "primevue/datatable";
 import Column from "primevue/column";
 import { storeToRefs } from "pinia";
-import { ref, type Ref } from "vue";
+import { ref, computed, type Ref } from "vue";
 import { useExpenses } from "@/stores/expenses";
 import EditExpenseForm from "./EditExpenseForm.vue";
 import ExpensesFilters from "./ExpensesFilters.vue";
 import Button from "primevue/button";
 
 const expensesStore = useExpenses();
-const { filteredExpenses, total } = storeToRefs(expensesStore);
+const { filteredExpenses, total, appliedFilters } = storeToRefs(expensesStore);
 
 const itemToEdit: Ref<string | null> = ref(null);
 
@@ -21,18 +21,26 @@ const closeEditHandler = () => {
   itemToEdit.value = null;
 };
 
+const showFiltersBtn = computed(() => filteredExpenses.value.length > 1);
+
 const filtersActive = ref(false);
 
 const toggleFilters = () => {
   filtersActive.value = !filtersActive.value;
 };
+
+const emptyExpenseMessage = computed(() => {
+  return filteredExpenses.value.length === 0 && appliedFilters.value
+    ? "No expenses match the criteria"
+    : "You don't have any expenses yet";
+});
 </script>
 
 <template>
   <div class="outerContainer">
     <div v-if="filteredExpenses.length > 0" class="tableContainer">
       <DataTable :value="filteredExpenses" scrollable stripedRows removableSort>
-        <template #header>
+        <template #header v-if="showFiltersBtn">
           <i class="pi pi-filter" aria-label="Filter" @click="toggleFilters" />
         </template>
         <Column header="Date" field="date" sortable></Column>
@@ -52,7 +60,9 @@ const toggleFilters = () => {
             />
           </template>
         </Column>
-        <template #footer>Total: {{ total }}</template>
+        <template #footer
+          ><span>Total: {{ total }}</span></template
+        >
       </DataTable>
       <Button
         label="Generate Summary"
@@ -61,7 +71,7 @@ const toggleFilters = () => {
         @click="expensesStore.generateSummary()"
       />
     </div>
-    <span v-else>You don't have any expenses yet.</span>
+    <span v-else>{{ emptyExpenseMessage }}</span>
   </div>
   <ExpensesFilters :visible="filtersActive" :on-close="toggleFilters" />
   <EditExpenseForm
