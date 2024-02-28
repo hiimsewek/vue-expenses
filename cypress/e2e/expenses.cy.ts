@@ -151,11 +151,25 @@ describe("Edit expense", () => {
     cy.getData("editExpenseBtn").should("be.disabled");
   });
 
-  it("edits expense", () => {
+  it.only("edits expense", () => {
+    cy.getData("editExpenseDate").clear();
+    cy.getData("editExpenseDate").type("02/27/2024{enter}");
+
+    cy.getData("editExpenseCategory").clear();
+    cy.getData("editExpenseCategory").type("Food");
+
     cy.getData("editExpenseAmount").clear();
     cy.getData("editExpenseAmount").type("120");
+
     cy.getData("editExpenseBtn").click();
     cy.getData("expensesTable").find("tbody > tr").should("have.length", 1);
+
+    cy.getData("expensesTable").should("not.contain", "02/26/2024");
+    cy.getData("expensesTable").should("contain", "02/27/2024");
+
+    cy.getData("expensesTable").should("not.contain", "Fuel");
+    cy.getData("expensesTable").should("contain", "Food");
+
     cy.getData("expensesTable").should("not.contain", "100");
     cy.getData("expensesTable").should("contain", "120");
   });
