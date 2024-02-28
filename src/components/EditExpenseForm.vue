@@ -8,7 +8,7 @@ import InputText from "primevue/inputtext";
 import { computed, ref, type Ref } from "vue";
 import { v4 as uuidv4 } from "uuid";
 import { storeToRefs } from "pinia";
-import { getCurrentYear, getTodaysDate } from "@/utils/date";
+import { getCurrentYear, getFormattedDate, getTodaysDate } from "@/utils/date";
 import { useExpenses } from "@/stores/expenses";
 
 const props = defineProps({
@@ -56,7 +56,7 @@ const submitEditHandler = () => {
 
   const data = {
     id,
-    date: date.value,
+    date: getFormattedDate(new Date(date.value)),
     category: category.value,
     amount: amount.value,
   };
