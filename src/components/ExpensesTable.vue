@@ -133,6 +133,7 @@ const emptyExpenseMessage = computed(() => {
 
 .generateBtn {
   margin-top: 10px;
+  align-self: center;
 }
 
 @media (min-width: 1280px) {
