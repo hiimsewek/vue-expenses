@@ -126,10 +126,11 @@ export const useExpenses = defineStore(STORE_KEY, () => {
   });
 
   const total = computed(() => {
-    return filteredExpenses.value.reduce(
+    const val = filteredExpenses.value.reduce(
       (result, expense) => (result += expense.amount),
       0
     );
+    return val.toFixed(2);
   });
 
   const expensesSummary: Ref<ExpensesSummary | null> = ref(null);

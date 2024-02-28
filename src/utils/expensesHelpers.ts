@@ -68,14 +68,19 @@ export const prepareSummaryData = (expenses: GroupedByMonth) => {
       result[itemIndex].categories[category].expenses[day - 1];
 
     if (amountValue === "-") {
-      result[itemIndex].categories[category].expenses[day - 1] = amount;
-    } else {
       result[itemIndex].categories[category].expenses[day - 1] =
-        +amountValue + amount;
+        amount.toFixed(2);
+    } else {
+      console.log({ amount });
+      result[itemIndex].categories[category].expenses[day - 1] = (
+        +amountValue + amount
+      ).toFixed(2);
     }
 
-    result[itemIndex].total += amount;
-    result[itemIndex].categories[category].total += amount;
+    result[itemIndex].total = +(result[itemIndex].total + amount).toFixed(2);
+    result[itemIndex].categories[category].total = +(
+      result[itemIndex].categories[category].total + amount
+    ).toFixed(2);
 
     return result;
   }, []);
