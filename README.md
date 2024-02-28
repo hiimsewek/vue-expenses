@@ -1,6 +1,17 @@
 # vue-expenses
 
-This template should help get you started developing with Vue 3 in Vite.
+Simple progressive web application that allows you to keep track of your expenses.
+
+[Live Demo](https://main--vue-expenses.netlify.app/)
+
+## Tech Stack
+
+- Vue
+- Pinia
+- TypeScript
+- PrimeVue + PrimeIcons
+- VitePWA
+- Cypress
 
 ## Recommended IDE Setup
 
@@ -66,3 +77,18 @@ npm run test:e2e
 ```sh
 npm run lint
 ```
+
+## Screenshots
+
+<p align = "center">
+  <img src = "https://github.com/hiimsewek/vue-expenses/assets/62641653/5e9984b4-0539-404a-a946-20166045f8ae"/>
+</p>
+<p align = "center">
+  <img src = "https://github.com/hiimsewek/vue-expenses/assets/62641653/8b5d6f71-a2f7-4864-9d09-c2b5e9a83a1b"/>
+</p>
+<p align = "center">
+  <img src = "https://github.com/hiimsewek/vue-expenses/assets/62641653/663960b0-1641-45e7-8854-8954ab54cd71"/>
+</p>
+<p align = "center">
+  <img src = "https://github.com/hiimsewek/vue-expenses/assets/62641653/0ee98a38-be2a-4971-83ae-06718b0c28c5"/>
+</p>
